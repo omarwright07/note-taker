@@ -30,4 +30,5 @@ The application’s front end has already been created. It's your job to build t
 ## GitHub Location:
 https://github.com/omarwright07/note-taker
 
-## Recording Location:
+## Heroku Location:
+https://sheltered-tor-99371.herokuapp.com/
