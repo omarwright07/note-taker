@@ -16,6 +16,10 @@ body {
   cursor: pointer;
 }
 
+.fa-trash-alt {
+  padding: 5px;
+}
+
 .note-textarea,
 .note-title {
   color: #000000;

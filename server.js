@@ -15,7 +15,6 @@ app.use(express.json());
 app.use(express.static('public'));
 
 function createNewNote(body, notesArray) {
-    console.log(body);
     const note = body;
     notesArray.push(note);
     fs.writeFileSync(
@@ -29,6 +28,10 @@ function filterOutNote(query, notesArray) {
     let filteredResults = notesArray;
     filteredResults = filteredResults.filter(
         note => note.id !== query);
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify({ notes: filteredResults }, null, 2)
+    );
     return filteredResults;
 };
 
@@ -38,18 +41,15 @@ app.get("/api/notes", (req, res) => {
 });
 
 app.post("/api/notes", (req, res) => {
-    console.log(req.body);
-    // set id based on what the next index of the array will be
+    // Sets unique id
     req.body.id = uniqid();
     const note = createNewNote(req.body, notes);
     res.json(note);
 });
 
 app.delete("/api/notes/:id", (req, res) => {
-    console.log(notes);
-    console.log(req.params.id);
-    console.log(filterOutNote(req.params.id, notes));
-    // res.json();
+    const newNotes = filterOutNote(req.params.id, notes);
+    res.json(newNotes);
 });
 
 // HTML Routes
