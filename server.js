@@ -3,36 +3,41 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const PORT = process.env.PORT || 3001;
-const { notes } = require('./db/db.json');
 const uniqid = require('uniqid');
+const notes = require('./db/db.json');
 
 // Parses
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
-
 app.use(express.static('public'));
 
 function createNewNote(body, notesArray) {
-    const note = body;
-    notesArray.push(note);
+    // let note = body;
+    notesArray.push(body);
+    // fs.writeFile('./db/db.json', JSON.stringify(notesArray), err => {
+    //     if (err) {
+    //         console.error(err);
+    //     }
+    // });
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
         JSON.stringify({ notes: notesArray }, null, 2)
     );
-    return note;
+    return notesArray;
 };
 
 function filterOutNote(query, notesArray) {
-    let filteredResults = notesArray;
-    filteredResults = filteredResults.filter(
-        note => note.id !== query);
+    // let filteredResults = notesArray;
+    fliteredResults = notesArray.filter(
+        note => note.id == query);
+    notesArray = notesArray.splice((notesArray).indexOf(fliteredResults), 1);
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
-        JSON.stringify({ notes: filteredResults }, null, 2)
+        JSON.stringify({ notes: notesArray }, null, 2)
     );
-    return filteredResults;
+    return notesArray;
 };
 
 // API Routes
@@ -48,8 +53,8 @@ app.post("/api/notes", (req, res) => {
 });
 
 app.delete("/api/notes/:id", (req, res) => {
-    const newNotes = filterOutNote(req.params.id, notes);
-    res.json(newNotes);
+    const newNote = filterOutNote(req.params.id, notes);
+    res.json(newNote);
 });
 
 // HTML Routes
