@@ -3,8 +3,8 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const PORT = process.env.PORT || 3001;
-const { notes } = require('./db/db.json');
 const uniqid = require('uniqid');
+var { notes } = require('./db/db.json');
 
 // Parses
 // parse incoming string or array data
@@ -43,13 +43,13 @@ app.get("/api/notes", (req, res) => {
 app.post("/api/notes", (req, res) => {
     // Sets unique id
     req.body.id = uniqid();
-    const note = createNewNote(req.body, notes);
+    let note = createNewNote(req.body, notes);
     res.json(note);
 });
 
 app.delete("/api/notes/:id", (req, res) => {
-    const newNotes = filterOutNote(req.params.id, notes);
-    res.json(newNotes);
+    notes = filterOutNote(req.params.id, notes);
+    res.json(notes);
 });
 
 // HTML Routes
